@@ -10,16 +10,6 @@ public class Main {
     static String letters = "abc";
     static int countParsedThreads = letters.length();
 
-    static int countCharsOfStr(String str, char symbol) {
-        int count = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == symbol) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     static class CountChars implements Callable<Integer> {
         int index;
 
@@ -28,18 +18,26 @@ public class Main {
         }
 
         public Integer call() throws Exception {
+
             int count = 0;
+            int max = 0;
             for (int i = 0; i < COUNT_TEXTS; i++) {
                 try {
                     String tmpStr = texts[index].take();
-                    count += countCharsOfStr(tmpStr, letters.charAt(index));
+                    for (char c : tmpStr.toCharArray()) {
+                        if (c == letters.charAt(index) ) {
+                            count++;
+                        }
+                    }
+                    if (count > max) {
+                        max = count;
+                    }
                     //  Thread.sleep(150);
                 } catch (InterruptedException e) {
                 }
             }
-            return count;
+        return max;
         }
-
     }
 
     public static String generateText(String letters, int length) {
@@ -93,4 +91,5 @@ public class Main {
 
 
     }
+
 }
